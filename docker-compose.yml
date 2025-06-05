@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  localstack:
+    image: localstack/localstack:latest
+    container_name: localnotes-localstack
+    ports:
+      - "4566:4566"  # Edge port for all AWS services
+      - "4571:4571"  # Optional (deprecated port)
+    environment:
+      - SERVICES=lambda,dynamodb,apigateway
+      - DEBUG=1
+      - DATA_DIR=/tmp/localstack/data
+    volumes:
+      - "./localstack-data:/tmp/localstack"  # Persist data
+      - "/var/run/docker.sock:/var/run/docker.sock"  # Required for Lambda
