@@ -14,21 +14,6 @@
 
 ---
 
-## 🧱 Project Structure
-
-localnotes/
-├── backend/ # Lambda functions, API Gateway definitions
-├── frontend/ # React SPA (Vite)
-├── .github/ # CI/CD pipelines (optional)
-├── docker-compose.yml # LocalStack & local dev env
-└── README.md
-
-yaml
-Copy
-Edit
-
----
-
 ## 🔧 Technologies Used
 
 | Service     | Local Simulation | Purpose               |
