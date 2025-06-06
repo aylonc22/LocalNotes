@@ -9,7 +9,7 @@ source .env
 set +o allexport
 
 echo "✅ Running tests..."
-npm run test
+npm run test:ci
 
 echo "✅ Tests passed. Deploying to LocalStack..."
 
@@ -17,6 +17,6 @@ echo "✅ Tests passed. Deploying to LocalStack..."
 npm run build:only
 
 # Deploy (adjust to your deploy logic)
-./scripts/deploy-functions.sh
+node ./scripts/deploy-createNote.js
 
 echo "🚀 Deployment to LocalStack complete."
