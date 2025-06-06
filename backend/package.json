@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "esbuild functions/*.ts --bundle --platform=node --target=node18 --outdir=dist"
+    "build":"bash ./scripts/deploy.sh",
+    "build:only": "esbuild functions/*.ts --bundle --platform=node --target=node18 --outdir=dist",
+    "test": "vitest"
   },
   "keywords": [],
   "author": "",
@@ -18,10 +20,11 @@
   "devDependencies": {
     "@types/aws-lambda": "^8.10.149",
     "@types/express": "^5.0.2",
-    "@types/node": "^22.15.29",
+    "@types/node": "^22.15.30",
     "esbuild": "^0.25.5",
     "nodemon": "^3.1.10",
     "ts-node": "^10.9.2",
-    "typescript": "^5.8.3"
+    "typescript": "^5.8.3",
+    "vitest": "^3.2.2"
   }
 }
