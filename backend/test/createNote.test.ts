@@ -1,5 +1,7 @@
 import { handler as createNote } from '../functions/createNote';
 import { describe, it, expect } from 'vitest';
+import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
+import dotenv from "dotenv";
 
 describe('createNote Lambda', () => {
   it('should create a note and return success', async () => {
@@ -13,3 +15,45 @@ describe('createNote Lambda', () => {
     expect(JSON.parse(result.body).message).toBe('Note created!');
   })
 })
+
+// createNote.test.ts
+
+
+dotenv.config();
+
+const lambda = new LambdaClient({
+  region: process.env.AWS_REGION,
+  endpoint: process.env.AWS_ENDPOINT, // e.g., http://localhost:4566
+});
+
+describe("createNote Lambda - E2E", () => {
+  it("should create a note successfully", async () => {
+    const payload = {
+      body: JSON.stringify({
+        title: "Test Note",
+        content: "This is a test.",
+      }),
+    };
+
+    const command = new InvokeCommand({
+      FunctionName: "createNote",
+      Payload: Buffer.from(JSON.stringify(payload)),
+    });
+
+    const response = await lambda.send(command);
+
+    expect(response.StatusCode).toBe(200);
+
+    const responsePayload = JSON.parse(
+      Buffer.from(response.Payload!).toString("utf-8")
+    );
+
+    expect(responsePayload.statusCode).toBe(200);
+    expect(typeof responsePayload.body).toBe("string");
+
+    const body = JSON.parse(responsePayload.body);
+    expect(body).toHaveProperty("id");
+    expect(body.title).toBe("Test Note");
+  });
+});
+

@@ -1,5 +1,10 @@
 // deploy-createNote.js
-const { LambdaClient, UpdateFunctionCodeCommand } = require("@aws-sdk/client-lambda");
+const {
+  LambdaClient,
+  GetFunctionCommand,
+  UpdateFunctionCodeCommand,
+  CreateFunctionCommand,
+} = require("@aws-sdk/client-lambda");
 const fs = require("fs");
 const path = require("path");
 require("dotenv").config();
@@ -18,17 +23,40 @@ async function deploy() {
 
   const zipFile = fs.readFileSync(ZIP_FILE_PATH);
 
-  const command = new UpdateFunctionCodeCommand({
-    FunctionName: FUNCTION_NAME,
-    ZipFile: zipFile,
-  });
-
   try {
-    const response = await client.send(command);
-    console.log(`✅ ${FUNCTION_NAME} deployed successfully.`);
+    // Try to get the function
+    await client.send(new GetFunctionCommand({ FunctionName: FUNCTION_NAME }));
+
+    // If exists, update it
+    const updateCmd = new UpdateFunctionCodeCommand({
+      FunctionName: FUNCTION_NAME,
+      ZipFile: zipFile,
+    });
+
+    await client.send(updateCmd);
+    console.log(`✅ ${FUNCTION_NAME} updated successfully.`);
   } catch (err) {
-    console.error("Deployment failed:", err);
-    process.exit(1);
+    if (err.name === "ResourceNotFoundException") {
+      // If function doesn't exist, create it
+      const createCmd = new CreateFunctionCommand({
+        FunctionName: FUNCTION_NAME,
+        Role: "arn:aws:iam::000000000000:role/lambda-role", // Must exist in LocalStack
+        Handler: "index.handler",
+        Runtime: "nodejs18.x",
+        Code: { ZipFile: zipFile },
+        Environment: {
+          Variables: {
+            TABLE_NAME: "NotesTable", // Optional env vars
+          },
+        },
+      });
+
+      await client.send(createCmd);
+      console.log(`✅ ${FUNCTION_NAME} created successfully.`);
+    } else {
+      console.error("Deployment failed:", err);
+      process.exit(1);
+    }
   }
 }
 
