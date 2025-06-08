@@ -41,7 +41,7 @@ async function deploy() {
       const createCmd = new CreateFunctionCommand({
         FunctionName: FUNCTION_NAME,
         Role: "arn:aws:iam::000000000000:role/lambda-role", // Must exist in LocalStack
-        Handler: "index.handler",
+        Handler: `${FUNCTION_NAME}.handler`,
         Runtime: "nodejs18.x",
         Code: { ZipFile: zipFile },
         Environment: {

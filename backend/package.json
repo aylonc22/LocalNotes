@@ -7,7 +7,7 @@
     "build": "\"\"C:\\Program Files\\Git\\bin\\bash.exe\"\" ./scripts/deploy.sh",
     "build:only": "esbuild functions/*.ts --bundle --platform=node --target=node18 --outdir=dist",
     "test": "vitest",
-    "test:ci": "vitest --watch=false"
+    "test:ci": "cross-env BUILD=true vitest --watch=false"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +16,7 @@
     "@aws-sdk/client-dynamodb": "^3.823.0",
     "@aws-sdk/client-lambda": "^3.826.0",
     "aws-sdk": "^2.1692.0",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.5.0",
     "express": "^5.1.0"
   },

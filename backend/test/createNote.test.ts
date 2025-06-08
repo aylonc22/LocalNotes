@@ -3,6 +3,8 @@ import { describe, it, expect } from 'vitest';
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import dotenv from "dotenv";
 
+const isBuild = process.env.BUILD === "true";
+
 describe('createNote Lambda', () => {
   it('should create a note and return success', async () => {
     const event = {
@@ -26,12 +28,12 @@ const lambda = new LambdaClient({
   endpoint: process.env.AWS_ENDPOINT, // e.g., http://localhost:4566
 });
 
-describe("createNote Lambda - E2E", () => {
+describe.skipIf(isBuild)("createNote Lambda - E2E", () => {
   it("should create a note successfully", async () => {
     const payload = {
       body: JSON.stringify({
         title: "Test Note",
-        content: "This is a test.",
+        content: "This is a test.",       
       }),
     };
 
@@ -51,9 +53,9 @@ describe("createNote Lambda - E2E", () => {
     expect(responsePayload.statusCode).toBe(200);
     expect(typeof responsePayload.body).toBe("string");
 
-    const body = JSON.parse(responsePayload.body);
-    expect(body).toHaveProperty("id");
-    expect(body.title).toBe("Test Note");
+    const body = JSON.parse(responsePayload.body);   
+    expect(body.note).toHaveProperty("id");
+    expect(body.note.title).toBe("Test Note");
   });
 });
 
