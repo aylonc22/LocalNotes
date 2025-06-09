@@ -1,4 +1,6 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from 'aws-lambda'
+import { ddb } from '../lib/dynamoClient';
+import { PutCommand } from '@aws-sdk/lib-dynamodb';
 
 export const handler = async (
   event: APIGatewayEvent
@@ -12,6 +14,11 @@ export const handler = async (
     content,
     createdAt: new Date().toISOString()
   }
+
+  await ddb.send(new PutCommand({
+    TableName:'NotesTable',
+    Item:note
+  }))
 
   return {
     statusCode: 200,
