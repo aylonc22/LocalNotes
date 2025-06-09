@@ -7,7 +7,6 @@ export const handler = async (
 ): Promise<APIGatewayProxyResult> => {
   const { title, content } = JSON.parse(event.body || '{}')
 
-  // In a real app, you'd save to DynamoDB here
   const note = {
     id: Date.now().toString(),
     title,

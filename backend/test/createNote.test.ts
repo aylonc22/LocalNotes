@@ -26,6 +26,10 @@ dotenv.config();
 const lambda = new LambdaClient({
   region: process.env.AWS_REGION,
   endpoint: process.env.AWS_ENDPOINT, // e.g., http://localhost:4566
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID || "test",
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "test",
+  },
 });
 
 describe.skipIf(isBuild)("createNote Lambda - E2E", () => {
