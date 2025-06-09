@@ -16,5 +16,6 @@ services:
       - AWS_REGION=${AWS_REGION}
       - AWS_DEFAULT_REGION=${AWS_REGION}
     volumes:
+      - ./backend/scripts/init-aws.sh:/etc/localstack/init/ready.d/init-aws.sh
       - "./localstack-data:/temp/localstack"  # Persist data
       - "/var/run/docker.sock:/var/run/docker.sock"  # Required for Lambda
