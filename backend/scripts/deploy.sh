@@ -17,6 +17,6 @@ echo "✅ Tests passed. Deploying to LocalStack..."
 npm run build:only
 
 # Deploy (adjust to your deploy logic)
-node ./scripts/deploy-createNote.js
+node ./scripts/deploy-functions.js
 
 echo "🚀 Deployment to LocalStack complete."
