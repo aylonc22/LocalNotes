@@ -21,8 +21,8 @@ const AWS_REGION = process.env.AWS_REGION;
 const LAMBDA_ROLE_ARN = "arn:aws:iam::000000000000:role/lambda-role"; // LocalStack-compatible role
 
 const lambda = new LambdaClient({
-  region: AWS_REGION,
-  endpoint: AWS_ENDPOINT,
+  region: AWS_REGION || "us-east-1",
+  endpoint: AWS_ENDPOINT || "http://localhost:4566",
   credentials: {
       accessKeyId: process.env.AWS_ACCESS_KEY_ID || "test",
       secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "test",
