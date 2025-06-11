@@ -9,6 +9,11 @@ const path = require("path");
 const archiver = require("archiver");
 require("dotenv").config();
 
+
+if (!process.env.AWS_ENDPOINT || !process.env.AWS_ENDPOINT_LOCALSTACK) {
+  throw new Error("Missing AWS_ENDPOINT or AWS_ENDPOINT_LOCALSTACK in .env");
+}
+
 const FUNCTIONS_DIR = path.resolve("functions");
 const BUILD_DIR = path.resolve("dist");
 const AWS_ENDPOINT = process.env.AWS_ENDPOINT;

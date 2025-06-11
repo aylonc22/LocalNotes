@@ -2,6 +2,7 @@ import { handler as createNote } from '../functions/createNote';
 import { describe, it, expect } from 'vitest';
 import { LambdaClient, InvokeCommand } from "@aws-sdk/client-lambda";
 import dotenv from "dotenv";
+dotenv.config();
 
 const isBuild = process.env.BUILD === "true";
 
@@ -21,11 +22,11 @@ describe('createNote Lambda', () => {
 // createNote.test.ts
 
 
-dotenv.config();
+
 
 const lambda = new LambdaClient({
   region: process.env.AWS_REGION,
-  endpoint: process.env.AWS_ENDPOINT, // e.g., http://localhost:4566
+  endpoint:'http://localhost:4566',// process.env.AWS_ENDPOINT, // e.g., http://localhost:4566
   credentials: {
     accessKeyId: process.env.AWS_ACCESS_KEY_ID || "test",
     secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY || "test",

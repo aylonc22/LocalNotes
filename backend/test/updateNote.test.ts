@@ -6,6 +6,8 @@ import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 import dotenv from 'dotenv';
 
 dotenv.config();
+console.log(process.env.AWS_REGION)
+console.log(process.env.AWS_ENDPOINT_LOCALSTACK);
 
 describe('updateNote Lambda', () => {
   it('should update a note and return updated note', async () => {
