@@ -1,19 +1,19 @@
-body,
-html,
-#root {
-  height: 100vh;
-  width: 100vw;
+/* Add this globally (e.g., App.css or index.css) */
+html, body, #root {
+  height: 100%; 
   margin: 0;
   padding: 0;
+  background-color: #f3f4f6;
   font-family: system-ui, sans-serif;
-  background: #f3f4f6;
 }
 
-.app-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-  padding: 2rem;
+/* Wrap your app in a container */
+.app-wrapper {
+   display: flex;
+  justify-content: center;  /* horizontal center */
+  align-items: center;      /* vertical center */
+  height: 100vh;            /* fill viewport height */
+  background-color: #f3f4f6; /* optional background */
+  padding: 1rem;
   box-sizing: border-box;
 }

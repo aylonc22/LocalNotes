@@ -1,11 +1,17 @@
 .notes-container {
-  width: 100%;
-  max-width: 960px;
+  width: 100vw;
+  height: 100vh;  
   background: #fff;
   border-radius: 12px;
   padding: 2rem;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
-  overflow-y: auto;
+  box-sizing: border-box;
+    
+  overflow: hidden; /* prevent scrollbars here */
+  
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 
@@ -68,6 +74,18 @@
   display: flex;
   flex-wrap: wrap;
   gap: 1.5rem;
+
+  overflow-y: auto;
+  max-height: 60vh;  /* or a height you prefer */
+  padding-right: 10px; /* for content padding to avoid clipped text */
+
+  /* Hide scrollbar - cross-browser */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none;  /* IE 10+ */
+}
+
+.notes-list::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
 }
 
 .note-card {
