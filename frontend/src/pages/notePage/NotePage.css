@@ -1,0 +1,124 @@
+.notes-container {
+  width: 100%;
+  max-width: 960px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+  overflow-y: auto;
+}
+
+
+.notes-heading {
+  font-size: 2.5rem;
+  text-align: center;
+  font-weight: 700;
+  color: #1f2937;
+  letter-spacing: -0.5px;
+}
+
+.notes-form {
+  background-color: #f9fafb;
+  border-radius: 16px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  transition: all 0.3s ease;
+}
+
+.notes-input,
+.notes-textarea {
+  padding: 0.9rem 1.2rem;
+  border-radius: 12px;
+  border: 1px solid #e5e7eb;
+  background-color: #ffffff;
+  font-size: 1rem;
+  color: #111827;
+  transition: border 0.3s, box-shadow 0.3s;
+}
+
+.notes-input:focus,
+.notes-textarea:focus {
+  border-color: #6366f1;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+  outline: none;
+}
+
+.notes-button {
+  align-self: flex-end;
+  padding: 0.75rem 1.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  background: linear-gradient(to right, #6366f1, #8b5cf6);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.notes-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(99, 102, 241, 0.3);
+}
+
+.notes-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+}
+
+.note-card {
+  flex: 1 1 calc(100% - 1.5rem); /* full width by default */
+  max-width: 100%;
+}
+
+@media (min-width: 600px) {
+  .note-card {
+    flex: 1 1 calc(50% - 1.5rem);
+  }
+}
+
+@media (min-width: 900px) {
+  .note-card {
+    flex: 1 1 calc(33.333% - 1.5rem);
+  }
+}
+
+.note-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.note-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
+.note-title {
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 0.5rem;
+}
+
+.note-content {
+  font-size: 1rem;
+  color: #4b5563;
+  flex: 1;
+  margin-bottom: 1rem;
+}
+
+.note-timestamp {
+  font-size: 0.75rem;
+  color: #9ca3af;
+  text-align: right;
+}
