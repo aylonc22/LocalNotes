@@ -30,7 +30,7 @@ export default function NotesPage() {
 
   return (
     <div className="notes-container">
-      <h1 className="notes-heading">📝 My Notes</h1>
+      <h1 className="notes-heading">📝 Notes</h1>
 
       <div className="notes-form">
         <input
