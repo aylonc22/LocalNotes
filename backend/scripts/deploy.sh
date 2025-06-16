@@ -18,5 +18,6 @@ npm run build:only
 
 # Deploy (adjust to your deploy logic)
 node ./scripts/deploy-functions.js
+node ./scripts/init-api-gateway.js
 
 echo "🚀 Deployment to LocalStack complete."
