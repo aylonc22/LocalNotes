@@ -1,6 +1,7 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import { ddb } from "../lib/dynamoClient";
 import { GetCommand, ScanCommand } from "@aws-sdk/lib-dynamodb";
+import { withCors } from "../lib/withCors";
 
 export const handler = async (
   event: APIGatewayEvent
@@ -17,16 +18,10 @@ export const handler = async (
       );
 
       if (!result.Item) {
-        return {
-          statusCode: 404,
-          body: JSON.stringify({ message: `Note with id ${id} not found.` }),
-        };
+        return withCors(404, { message: `Note with id ${id} not found.` });
       }
 
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ note: result.Item }),
-      };
+      return withCors(200, { note: result.Item });
     } else {
       const result = await ddb.send(
         new ScanCommand({
@@ -34,18 +29,12 @@ export const handler = async (
         })
       );
 
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ notes: result.Items || [] }),
-      };
+      return withCors(200, { notes: result.Items || [] });
     }
   } catch (error: any) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({
-        message: "An error occurred.",
-        error: error.message || error,
-      }),
-    };
+    return withCors(500, {
+      message: "An error occurred.",
+      error: error.message || error,
+    });
   }
 };

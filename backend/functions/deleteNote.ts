@@ -1,6 +1,7 @@
 import { APIGatewayEvent, APIGatewayProxyResult } from "aws-lambda";
 import { ddb } from "../lib/dynamoClient";
 import { DeleteCommand } from "@aws-sdk/lib-dynamodb";
+import { withCors } from "../lib/withCors";
 
 export const handler = async (
   event: APIGatewayEvent
@@ -21,8 +22,6 @@ export const handler = async (
     })
   );
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ message: `Note with id ${id} deleted.` }),
-  };
+  return withCors(200,
+    { message: `Note with id ${id} deleted.` });
 };

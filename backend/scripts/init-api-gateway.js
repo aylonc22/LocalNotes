@@ -80,10 +80,59 @@ async function attachMethod(apiId, resourceId, method, lambdaName) {
       Principal: 'apigateway.amazonaws.com',
       SourceArn: `arn:aws:execute-api:${REGION}:${LAMBDA_ACCOUNT_ID}:${apiId}/*/${method}/notes*`,
     }).promise();
+  
   } catch (err) {
     if (err.code !== 'ResourceConflictException') throw err;
   }
 }
+
+async function enableCors(apiId, resourceId) {
+  try {
+    await apigateway.putMethod({
+      restApiId: apiId,
+      resourceId,
+      httpMethod: "OPTIONS",
+      authorizationType: "NONE",
+    }).promise();
+  } catch (err) {
+    if (err.code !== "ConflictException") throw err;
+  }
+
+  await apigateway.putIntegration({
+    restApiId: apiId,
+    resourceId,
+    httpMethod: "OPTIONS",
+    type: "MOCK",
+    requestTemplates: {
+      "application/json": '{"statusCode": 200}',
+    },
+  }).promise();
+
+  await apigateway.putMethodResponse({
+    restApiId: apiId,
+    resourceId,
+    httpMethod: "OPTIONS",
+    statusCode: "200",
+    responseParameters: {
+      "method.response.header.Access-Control-Allow-Headers": true,
+      "method.response.header.Access-Control-Allow-Methods": true,
+      "method.response.header.Access-Control-Allow-Origin": true,
+    },
+  }).promise();
+
+  await apigateway.putIntegrationResponse({
+    restApiId: apiId,
+    resourceId,
+    httpMethod: "OPTIONS",
+    statusCode: "200",
+    responseParameters: {
+      "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'",
+      "method.response.header.Access-Control-Allow-Methods": "'GET,POST,PUT,DELETE,OPTIONS'",
+      "method.response.header.Access-Control-Allow-Origin": "'*'",
+    },
+  }).promise();
+}
+
 
 async function main() {
   console.log(`🔧 Setting up API Gateway for ${API_NAME}...`);
@@ -117,6 +166,9 @@ async function main() {
       await attachMethod(apiId, idId, 'GET', funcName);
     }
   }
+
+   await enableCors(apiId, notesId);
+   await enableCors(apiId, idId);
 
   await apigateway.createDeployment({
     restApiId: apiId,
