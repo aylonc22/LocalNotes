@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./NotePage.css";
 
 type Note = {
@@ -8,24 +8,49 @@ type Note = {
   createdAt: string;
 };
 
+const API_BASE = import.meta.env.VITE_API_BASE;
+
 export default function NotesPage() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
 
-  const handleAddNote = () => {
+  // 🔄 Fetch notes from Lambda
+  useEffect(() => {
+    const fetchNotes = async () => {
+      try {
+        const res = await fetch(`${API_BASE}/notes`, {
+          method: "GET",
+        });
+        const data = await res.json();
+        setNotes(data.items || []);
+      } catch (err) {
+        console.error("Failed to fetch notes:", err);
+      }
+    };
+    fetchNotes();
+  }, []);
+
+  // ➕ Add new note via Lambda
+  const handleAddNote = async () => {
     if (!title.trim() || !content.trim()) return;
 
-    const newNote: Note = {
-      id: Date.now().toString(),
-      title: title.trim(),
-      content: content.trim(),
-      createdAt: new Date().toISOString(),
-    };
+    try {
+      const res = await fetch(`${API_BASE}/notes`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title: title.trim(), content: content.trim() }),
+      });
 
-    setNotes((prev) => [newNote, ...prev]);
-    setTitle("");
-    setContent("");
+      const { note } = await res.json();
+      setNotes((prev) => [note, ...prev]);
+      setTitle("");
+      setContent("");
+    } catch (err) {
+      console.error("Failed to create note:", err);
+    }
   };
 
   return (
