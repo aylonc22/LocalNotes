@@ -22,8 +22,8 @@ export default function NotesPage() {
         const res = await fetch(`${API_BASE}/notes`, {
           method: "GET",
         });
-        const data = await res.json();
-        setNotes(data.items || []);
+        const data = await res.json();       
+        setNotes(data.notes || []);
       } catch (err) {
         console.error("Failed to fetch notes:", err);
       }
