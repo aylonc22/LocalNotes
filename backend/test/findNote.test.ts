@@ -73,11 +73,11 @@ describe.skipIf(isBuild)("findNote Lambda - E2E", () => {
   });
 
   it("should fetch a note by ID", async () => {
-    console.log('fetch one');
+    console.log('fetch one',createdNoteId);
     const command = new InvokeCommand({
       FunctionName: "findNote",
       Payload: Buffer.from(
-        JSON.stringify({ pathParameters: JSON.stringify({ id: createdNoteId }) })
+        JSON.stringify({ pathParameters: { id: createdNoteId } })
       ),
     });
 

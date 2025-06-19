@@ -17,10 +17,9 @@ export const handler = async (
           Key: { id },
         })
       );
-
-      console.log(result.Item);
+     
       if (!result.Item) {
-
+        console.log(result)
         return withCors(404, { message: `Note with id ${id} not found.` });
       }
       return withCors(200, { note: result.Item });
