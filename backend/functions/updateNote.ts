@@ -49,7 +49,10 @@ export const handler = async (
     };
 
     const result = await ddb.send(new UpdateCommand(params));
-
+    console.log( withCors(200, {
+      message: 'Note updated!',
+      note: result.Attributes,
+    }))
     return withCors(200, {
       message: 'Note updated!',
       note: result.Attributes,

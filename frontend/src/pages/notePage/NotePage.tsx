@@ -70,11 +70,12 @@ export default function NotesPage() {
 
   const handleUpdateNote = async (id: string) => {
     try {
-      const res = await fetch(`${API_BASE}/notes`, {
+      const res = await fetch(`${API_BASE}/notes/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({id: id, title: editTitle, content: editContent }),
+        body: JSON.stringify({ title: editTitle, content: editContent }),
       });
+      console.log(res)
       const { note: updatedNote } = await res.json();
       if(updatedNote){
         setNotes((prev) =>

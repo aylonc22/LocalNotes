@@ -181,5 +181,6 @@ async function main() {
 
 main().catch(err => {
   console.error('❌ Error setting up API:', err.message);
+  console.log(err);
   process.exit(1);
 });
