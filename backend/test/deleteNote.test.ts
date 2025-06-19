@@ -7,14 +7,14 @@ dotenv.config();
 const isBuild = process.env.BUILD === "true";
 describe("deleteNote Lambda", () => {
   it("should return 400 when id is missing", async () => {
-    const result = await deleteNote({ body: "{}" } as any);
+    const result = await deleteNote({ pathParameters: {} } as any);
     expect(result.statusCode).toBe(400);
     expect(JSON.parse(result.body).message).toMatch(/Missing 'id'/);
   });
 
   it("should return 200 when id is provided", async () => {
     const result = await deleteNote({
-      body: JSON.stringify({ id: "123456" }),
+      pathParameters: { id: "123456" },
     } as any);
 
     expect(result.statusCode).toBe(200);
@@ -53,7 +53,7 @@ describe.skipIf(isBuild)("deleteNote Lambda - E2E", () => {
 
     // Now, delete the note
     const deletePayload = {
-      body: JSON.stringify({ id: noteId }),
+      pathParameters: { id: noteId },
     };
 
     const response = await lambda.send(

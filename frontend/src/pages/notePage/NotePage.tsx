@@ -6,6 +6,7 @@ type Note = {
   title: string;
   content: string;
   createdAt: string;
+  updatedAt?: string;
 };
 
 const API_BASE = import.meta.env.VITE_API_BASE;
@@ -14,15 +15,15 @@ export default function NotesPage() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const [editingNoteId, setEditingNoteId] = useState<string | null>(null);
+  const [editTitle, setEditTitle] = useState("");
+  const [editContent, setEditContent] = useState("");
 
-  // 🔄 Fetch notes from Lambda
   useEffect(() => {
     const fetchNotes = async () => {
       try {
-        const res = await fetch(`${API_BASE}/notes`, {
-          method: "GET",
-        });
-        const data = await res.json();       
+        const res = await fetch(`${API_BASE}/notes`);
+        const data = await res.json();
         setNotes(data.notes || []);
       } catch (err) {
         console.error("Failed to fetch notes:", err);
@@ -31,16 +32,13 @@ export default function NotesPage() {
     fetchNotes();
   }, []);
 
-  // ➕ Add new note via Lambda
   const handleAddNote = async () => {
     if (!title.trim() || !content.trim()) return;
 
     try {
       const res = await fetch(`${API_BASE}/notes`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title: title.trim(), content: content.trim() }),
       });
 
@@ -50,6 +48,42 @@ export default function NotesPage() {
       setContent("");
     } catch (err) {
       console.error("Failed to create note:", err);
+    }
+  };
+
+  const handleDeleteNote = async (id: string) => {
+    try {
+      await fetch(`${API_BASE}/notes/${id}`, {
+        method: "DELETE",
+      });
+      setNotes((prev) => prev.filter((note) => note.id !== id));
+    } catch (err) {
+      console.error("Failed to delete note:", err);
+    }
+  };
+
+  const startEditing = (note: Note) => {
+    setEditingNoteId(note.id);
+    setEditTitle(note.title);
+    setEditContent(note.content);
+  };
+
+  const handleUpdateNote = async (id: string) => {
+    try {
+      const res = await fetch(`${API_BASE}/notes`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({id: id, title: editTitle, content: editContent }),
+      });
+      const { note: updatedNote } = await res.json();
+      if(updatedNote){
+        setNotes((prev) =>
+        prev.map((n) => (n.id === id ? updatedNote : n))
+      );
+    }
+      setEditingNoteId(null);
+    } catch (err) {
+      console.error("Failed to update note:", err);
     }
   };
 
@@ -83,11 +117,38 @@ export default function NotesPage() {
       <div className="notes-list">
         {notes.map((note) => (
           <div key={note.id} className="note-card">
-            <h3 className="note-title">{note.title}</h3>
-            <p className="note-content">{note.content}</p>
-            <small className="note-timestamp">
-              {new Date(note.createdAt).toLocaleString()}
-            </small>
+            {editingNoteId === note.id ? (
+              <>
+                <input
+                  className="notes-input"
+                  value={editTitle}
+                  onChange={(e) => setEditTitle(e.target.value)}
+                />
+                <textarea
+                  className="notes-textarea"
+                  value={editContent}
+                  onChange={(e) => setEditContent(e.target.value)}
+                />
+                <button onClick={() => handleUpdateNote(note.id)}>
+                  Save
+                </button>
+                <button onClick={() => setEditingNoteId(null)}>Cancel</button>
+              </>
+            ) : (
+              <>
+                <h3 className="note-title">{note.title}</h3>
+                <p className="note-content">{note.content}</p>
+                <small className="note-timestamp">
+                  {new Date(note.createdAt).toLocaleString()}
+                </small>
+                <div className="note-actions">
+                  <button onClick={() => startEditing(note)}>Edit</button>
+                  <button onClick={() => handleDeleteNote(note.id)}>
+                    Delete
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         ))}
       </div>

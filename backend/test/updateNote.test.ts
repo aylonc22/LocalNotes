@@ -6,8 +6,6 @@ import { LambdaClient, InvokeCommand } from '@aws-sdk/client-lambda';
 import dotenv from 'dotenv';
 
 dotenv.config();
-console.log(process.env.AWS_REGION)
-console.log(process.env.AWS_ENDPOINT_LOCALSTACK);
 
 describe('updateNote Lambda', () => {
   it('should update a note and return updated note', async () => {
@@ -20,11 +18,13 @@ describe('updateNote Lambda', () => {
 
     // Then, update that note
     const updateEvent = {
-      body: JSON.stringify({
-        id: createdNote.id,
+      body: JSON.stringify({       
         title: 'Updated',
         content: 'Updated content',
       }),
+      pathParameters: {
+        id: createdNote.id,
+     },
     };
 
     const result = await updateNote(updateEvent as any);
@@ -68,11 +68,13 @@ describe.skipIf(isBuild)('updateNote Lambda - E2E', () => {
 
     // Step 2: Update the note
     const updatePayload = {
-      body: JSON.stringify({
-        id: createdNote.id,
+      body: JSON.stringify({       
         title: 'Updated Title',
         content: 'Updated Content',
       }),
+      pathParameters: {
+         id: createdNote.id,
+  },
     };
 
     const updateCommand = new InvokeCommand({

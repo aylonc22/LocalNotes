@@ -7,14 +7,10 @@ import dotenv from "dotenv";
 dotenv.config();
 const isBuild = process.env.BUILD === "true";
 
-describe("findNote Lambda", () => {
-  it("should return 400 if body is invalid JSON", async () => {
-    const result = await findNote({ body: "not-json" } as any);
-    expect(result.statusCode).toBe(500);
-  });
+describe("findNote Lambda", () => { 
 
   it("should return 200 and notes array if no ID provided", async () => {
-    const result = await findNote({ body: "{}" } as any);
+    const result = await findNote({ pathParameters: {} } as any);
     expect(result.statusCode).toBe(200);
     const body = JSON.parse(result.body);
     expect(Array.isArray(body.notes)).toBe(true);
@@ -22,7 +18,7 @@ describe("findNote Lambda", () => {
 
   it("should return 200 and a note when ID is found", async () => {
     const fakeId = "123456";
-    const result = await findNote({ body: JSON.stringify({ id: fakeId }) } as any);
+     const result = await findNote({ pathParameters: {id:fakeId} } as any);
     expect([200, 404]).toContain(result.statusCode);
   });
 });
@@ -65,7 +61,7 @@ describe.skipIf(isBuild)("findNote Lambda - E2E", () => {
   it("should fetch all notes", async () => {
     const command = new InvokeCommand({
       FunctionName: "findNote",
-      Payload: Buffer.from(JSON.stringify({ body: "{}" })),
+      Payload: Buffer.from(JSON.stringify({ pathParameters: "{}" })),
     });
 
     const response = await lambda.send(command);
@@ -77,18 +73,19 @@ describe.skipIf(isBuild)("findNote Lambda - E2E", () => {
   });
 
   it("should fetch a note by ID", async () => {
+    console.log('fetch one');
     const command = new InvokeCommand({
       FunctionName: "findNote",
       Payload: Buffer.from(
-        JSON.stringify({ body: JSON.stringify({ id: createdNoteId }) })
+        JSON.stringify({ pathParameters: JSON.stringify({ id: createdNoteId }) })
       ),
     });
 
     const response = await lambda.send(command);
     const payload = JSON.parse(Buffer.from(response.Payload!).toString("utf-8"));
-
     expect(payload.statusCode).toBe(200);
-    const body = JSON.parse(payload.body);
+    const body = JSON.parse(payload.body);    
+    console.log(body)
     expect(body.note.id).toBe(createdNoteId);
   });
 });

@@ -8,7 +8,8 @@ export const handler = async (
   event: APIGatewayEvent
 ): Promise<APIGatewayProxyResult> => {
   try {
-    const { id, title, content } = JSON.parse(event.body || '{}');
+    const id = event.pathParameters?.id;
+    const { title, content } = JSON.parse(event.body || '{}');
 
     if (!id) {
       return withCors(400, { message: 'Missing required field: id' });

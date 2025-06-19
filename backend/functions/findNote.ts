@@ -7,9 +7,10 @@ export const handler = async (
   event: APIGatewayEvent
 ): Promise<APIGatewayProxyResult> => {
   try {
-    const { id } = JSON.parse(event.body || "{}");
-
+   const id = event.pathParameters?.id;
+   
     if (id) {
+      console.log('here');
       const result = await ddb.send(
         new GetCommand({
           TableName: "NotesTable",
@@ -17,12 +18,13 @@ export const handler = async (
         })
       );
 
+      console.log(result.Item);
       if (!result.Item) {
+
         return withCors(404, { message: `Note with id ${id} not found.` });
       }
-
       return withCors(200, { note: result.Item });
-    } else {
+    } else {      
       const result = await ddb.send(
         new ScanCommand({
           TableName: "NotesTable",

@@ -6,7 +6,7 @@ import { withCors } from "../lib/withCors";
 export const handler = async (
   event: APIGatewayEvent
 ): Promise<APIGatewayProxyResult> => {
-  const { id } = JSON.parse(event.body || "{}");
+  const id = event.pathParameters?.id;
 
   if (!id) {
     return {
