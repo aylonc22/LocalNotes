@@ -74,8 +74,7 @@ export default function NotesPage() {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ title: editTitle, content: editContent }),
-      });
-      console.log(res)
+      });     
       const { note: updatedNote } = await res.json();
       if(updatedNote){
         setNotes((prev) =>
@@ -117,40 +116,50 @@ export default function NotesPage() {
 
       <div className="notes-list">
         {notes.map((note) => (
-          <div key={note.id} className="note-card">
-            {editingNoteId === note.id ? (
-              <>
-                <input
-                  className="notes-input"
-                  value={editTitle}
-                  onChange={(e) => setEditTitle(e.target.value)}
-                />
-                <textarea
-                  className="notes-textarea"
-                  value={editContent}
-                  onChange={(e) => setEditContent(e.target.value)}
-                />
-                <button onClick={() => handleUpdateNote(note.id)}>
-                  Save
-                </button>
-                <button onClick={() => setEditingNoteId(null)}>Cancel</button>
-              </>
-            ) : (
-              <>
-                <h3 className="note-title">{note.title}</h3>
-                <p className="note-content">{note.content}</p>
-                <small className="note-timestamp">
-                  {new Date(note.createdAt).toLocaleString()}
-                </small>
-                <div className="note-actions">
-                  <button onClick={() => startEditing(note)}>Edit</button>
-                  <button onClick={() => handleDeleteNote(note.id)}>
-                    Delete
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
+         <div key={note.id} className="note-card">
+         <div className="note-actions-top-right">
+          <button
+            className="icon-button"
+            onClick={() => startEditing(note)}
+            aria-label="Edit"
+          >
+            ✏️
+          </button>
+          <button
+            className="icon-button"
+            onClick={() => handleDeleteNote(note.id)}
+            aria-label="Delete"
+          >
+            🗑️
+          </button>
+        </div>
+
+          {editingNoteId === note.id ? (
+            <>
+              <input
+                className="notes-input"
+                value={editTitle}
+                onChange={(e) => setEditTitle(e.target.value)}
+              />
+              <textarea
+                className="notes-textarea"
+                value={editContent}
+                onChange={(e) => setEditContent(e.target.value)}
+              />
+              <button onClick={() => handleUpdateNote(note.id)}>Save</button>
+              <button onClick={() => setEditingNoteId(null)}>Cancel</button>
+            </>
+          ) : (
+            <>
+              <h3 className="note-title">{note.title}</h3>
+              <p className="note-content">{note.content}</p>
+              <small className="note-timestamp">
+                {new Date(note.createdAt).toLocaleString()}
+              </small>
+            </>
+          )}
+        </div>
+
         ))}
       </div>
     </div>
