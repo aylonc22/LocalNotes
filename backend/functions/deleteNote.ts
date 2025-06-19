@@ -9,6 +9,7 @@ export const handler = async (
   const id = event.pathParameters?.id;
 
   if (!id) {
+    console.error("Missing id:", event.pathParameters);
     return {
       statusCode: 400,
       body: JSON.stringify({ message: "Missing 'id' in request body" }),

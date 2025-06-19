@@ -9,8 +9,7 @@ export const handler = async (
   try {
    const id = event.pathParameters?.id;
    
-    if (id) {
-      console.log('here');
+    if (id) {     
       const result = await ddb.send(
         new GetCommand({
           TableName: "NotesTable",
@@ -18,8 +17,7 @@ export const handler = async (
         })
       );
      
-      if (!result.Item) {
-        console.log(result)
+      if (!result.Item) {       
         return withCors(404, { message: `Note with id ${id} not found.` });
       }
       return withCors(200, { note: result.Item });

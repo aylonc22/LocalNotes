@@ -66,7 +66,7 @@ describe.skipIf(isBuild)("deleteNote Lambda - E2E", () => {
     const payload = JSON.parse(
       Buffer.from(response.Payload!).toString("utf-8")
     );
-
+    
     expect(payload.statusCode).toBe(200);
     expect(JSON.parse(payload.body).message).toMatch(/deleted/);
   });
