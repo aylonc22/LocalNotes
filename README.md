@@ -21,7 +21,6 @@
 | Lambda      | LocalStack       | Serverless logic (note APIs) |
 | API Gateway | LocalStack       | RESTful API endpoint   |
 | DynamoDB    | LocalStack       | NoSQL storage for notes |
-| S3          | (Optional)       | Attachments or backups |
 | React       | Vite             | Fast SPA frontend      |
 
 ---
